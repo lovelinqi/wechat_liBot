@@ -25,10 +25,40 @@ npm start
 - `FIXED_REPLY`：收到好友消息时回复的固定文本（默认：`这是自动回复：我现在有事，稍后回复你。`）
 
 注意事项
-- 如果在容器中运行，请确保 `node_modules` 与生成的 memory-card（如 `WechatLiBot.memory-card.json`）在重启后能够持久化（例如挂载卷）。  
+- 如果在容器中运行，请确保 `node_modules` 与生成的 memory-card（如 `WechatLiBot.memory-card.json`）在重启后能够持久化（例如挂载卷）。
 - 本示例使用与主项目相同的 puppet，因此同样受限于会话持久化和账号风控的风险。生产环境建议优先使用企业微信（WeCom）等官方 API 以降低封号风险。
 
-如需我帮你：
-- 将 README 中的示例 `.env` 文件添加到仓库；或
-- 添加自动重连/守护逻辑示例；或
-- 提供容器部署时的持久化挂载示例（docker run/compose）。
+故障排除
+### GitHub 推送失败：邮箱隐私保护问题
+
+**问题现象：**
+```
+remote: error: GH007: Your push would publish a private email address.
+remote: You can make your email public or disable this protection by visiting:
+remote: https://github.com/settings/emails
+! [remote rejected] main -> main (push declined due to email privacy restrictions)
+```
+
+**问题原因：**
+GitHub 的邮箱隐私保护功能会阻止推送包含私人邮箱地址的提交，以保护用户隐私。当 Git 配置中使用个人邮箱（如 `username@outlook.com`）时，会触发此保护机制。
+
+**解决方案：**
+1. **更改 Git 邮箱为 GitHub 隐私保护邮箱：**
+   ```bash
+   git config user.email "YourUsername@users.noreply.github.com"
+   ```
+   将 `YourUsername` 替换为你的 GitHub 用户名。
+
+2. **修改现有提交的作者信息：**
+   ```bash
+   git commit --amend --reset-author --no-edit
+   ```
+
+3. **强制推送修改后的提交：**
+   ```bash
+   git push -u origin main --force-with-lease
+   ```
+
+**其他可选解决方案：**
+- 在 GitHub 设置中公开邮箱地址（访问 https://github.com/settings/emails）
+- 在 GitHub 设置中关闭"Block command line pushes that expose my email"选项
