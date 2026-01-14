@@ -40,3 +40,4 @@ npm start
 - Wechaty（核心 SDK 与生态）：https://github.com/wechaty/wechaty  
 - Wechaty 官方文档：https://wechaty.js.org
 - 复制来自于LijiangTn/wechat_liBot大佬的下面是链接
+-https://github.com/LijiangTn/wechat_liBot
